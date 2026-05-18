@@ -46,6 +46,39 @@ const NEWS_DOMAINS = [
   "bloomberg.com"
 ];
 
+const ADULT_DOMAINS = [
+  "pornhub.com",
+  "xvideos.com",
+  "xnxx.com",
+  "xhamster.com",
+  "redtube.com",
+  "youporn.com",
+  "pornmd.com",
+  "hqporner.com",
+  "spankbang.com",
+  "chaturbate.com",
+  "tube8.com",
+  "stripchat.com",
+  "camsoda.com",
+  "livejasmin.com",
+  "onlyfans.com",
+  "tnaflix.com",
+  "beeg.com",
+  "eporner.com",
+  "heavy-r.com",
+  "motherless.com",
+  "crazyshit.com",
+  "yuvutu.com",
+  "xtube.com",
+  "thumbzilla.com",
+  "anybunny.com",
+  "youjizz.com",
+  "boundhub.com",
+  "fapdu.com",
+  "tubegalore.com",
+  "pornkey.com"
+];
+
 // Helper to clean domain inputs
 function cleanDomain(url) {
   if (!url) return "";
@@ -73,11 +106,12 @@ function cleanDomain(url) {
 // Main function to rebuild and apply DNR rules dynamically
 async function updateBlockingRules() {
   try {
-    const data = await chrome.storage.local.get(["socialEnabled", "newsEnabled", "customSites"]);
+    const data = await chrome.storage.local.get(["socialEnabled", "newsEnabled", "adultEnabled", "customSites"]);
     
     // Default values if undefined
     const socialEnabled = data.socialEnabled !== undefined ? data.socialEnabled : true;
     const newsEnabled = data.newsEnabled !== undefined ? data.newsEnabled : true;
+    const adultEnabled = data.adultEnabled !== undefined ? data.adultEnabled : true;
     const customSites = data.customSites || [];
 
     let domainsToBlock = [];
@@ -90,6 +124,11 @@ async function updateBlockingRules() {
     // Add predefined news domains
     if (newsEnabled) {
       NEWS_DOMAINS.forEach(d => domainsToBlock.push(d));
+    }
+
+    // Add predefined adult domains
+    if (adultEnabled) {
+      ADULT_DOMAINS.forEach(d => domainsToBlock.push(d));
     }
 
     // Add custom domains after cleaning
@@ -136,21 +175,23 @@ async function updateBlockingRules() {
 
 // Listener for storage changes
 chrome.storage.onChanged.addListener((changes) => {
-  if (changes.socialEnabled || changes.newsEnabled || changes.customSites) {
+  if (changes.socialEnabled || changes.newsEnabled || changes.adultEnabled || changes.customSites) {
     updateBlockingRules();
   }
 });
 
 // Listener for extension installation or update
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local.get(["socialEnabled", "newsEnabled", "customSites"], (result) => {
+  chrome.storage.local.get(["socialEnabled", "newsEnabled", "adultEnabled", "customSites"], (result) => {
     const socialEnabled = result.socialEnabled !== undefined ? result.socialEnabled : true;
     const newsEnabled = result.newsEnabled !== undefined ? result.newsEnabled : true;
+    const adultEnabled = result.adultEnabled !== undefined ? result.adultEnabled : true;
     const customSites = result.customSites || [];
 
     chrome.storage.local.set({
       socialEnabled,
       newsEnabled,
+      adultEnabled,
       customSites
     }, () => {
       updateBlockingRules();

@@ -10,10 +10,13 @@ FocusGuard Fixed transitions your browsing experience from a distraction-filled 
 
 ### 1. ⚡ Dynamic Rules Engine (Manifest V3)
 Unlike old-school blockers that use heavy static configs or deprecated background interception routines, FocusGuard leverages the **Chrome Declarative Net Request (DNR) API** to dynamically block and redirect pages with sub-millisecond efficiency.
-*   **ON/OFF Category Toggles**: Turn blocking categories ON or OFF in real-time from the dashboard.
+*   **ON/OFF Category Toggles**: Turn blocking categories ON or OFF in real-time from the dashboard (Social Media, News Channels, Adult Content).
 *   **Smart URL Normalization**: Automatically strips protocols (`http://`, `https://`), paths (`/subpage`), port numbers, and `www.` prefixes to block full domains accurately.
 
-### 2. 📱 Premium Glassmorphic Dashboard
+### 2. 🔞 Adult Content Protection
+Includes a high-precision, comprehensive list of **30 major pornography and adult website domains** preloaded for direct, instant block filtering. Ideal for high-discipline productivity regimes.
+
+### 3. 📱 Premium Glassmorphic Dashboard
 A visually gorgeous interface styled using custom modern typography (**Outfit** font) and futuristic aesthetics:
 *   Real-time **Blocked Site Statistics Counter**.
 *   Customized toggles with sliding animations and glowing indicators.

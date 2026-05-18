@@ -3,10 +3,12 @@
 // Keep category sizes in sync with background.js
 const SOCIAL_COUNT = 11;
 const NEWS_COUNT = 29;
+const ADULT_COUNT = 30;
 
 // DOM Elements
 const toggleSocial = document.getElementById("toggle-social");
 const toggleNews = document.getElementById("toggle-news");
+const toggleAdult = document.getElementById("toggle-adult");
 const domainInput = document.getElementById("domain-input");
 const addBtn = document.getElementById("add-domain-btn");
 const listContainer = document.getElementById("custom-list-container");
@@ -38,18 +40,20 @@ function cleanDomain(url) {
 
 // Load configurations on startup
 document.addEventListener("DOMContentLoaded", () => {
-  chrome.storage.local.get(["socialEnabled", "newsEnabled", "customSites"], (result) => {
+  chrome.storage.local.get(["socialEnabled", "newsEnabled", "adultEnabled", "customSites"], (result) => {
     const socialEnabled = result.socialEnabled !== undefined ? result.socialEnabled : true;
     const newsEnabled = result.newsEnabled !== undefined ? result.newsEnabled : true;
+    const adultEnabled = result.adultEnabled !== undefined ? result.adultEnabled : true;
     const customSites = result.customSites || [];
 
     // Set UI checkboxes
     toggleSocial.checked = socialEnabled;
     toggleNews.checked = newsEnabled;
+    toggleAdult.checked = adultEnabled;
 
     // Render list
     renderCustomList(customSites);
-    updateBlockedCounter(socialEnabled, newsEnabled, customSites.length);
+    updateBlockedCounter(socialEnabled, newsEnabled, adultEnabled, customSites.length);
   });
 });
 
@@ -64,6 +68,13 @@ toggleSocial.addEventListener("change", () => {
 toggleNews.addEventListener("change", () => {
   const enabled = toggleNews.checked;
   chrome.storage.local.set({ newsEnabled: enabled }, () => {
+    updateStatistics();
+  });
+});
+
+toggleAdult.addEventListener("change", () => {
+  const enabled = toggleAdult.checked;
+  chrome.storage.local.set({ adultEnabled: enabled }, () => {
     updateStatistics();
   });
 });
@@ -150,18 +161,20 @@ function removeCustomDomain(index) {
 
 // Stats helper
 function updateStatistics() {
-  chrome.storage.local.get(["socialEnabled", "newsEnabled", "customSites"], (result) => {
+  chrome.storage.local.get(["socialEnabled", "newsEnabled", "adultEnabled", "customSites"], (result) => {
     const socialEnabled = result.socialEnabled !== undefined ? result.socialEnabled : true;
     const newsEnabled = result.newsEnabled !== undefined ? result.newsEnabled : true;
+    const adultEnabled = result.adultEnabled !== undefined ? result.adultEnabled : true;
     const customSites = result.customSites || [];
-    updateBlockedCounter(socialEnabled, newsEnabled, customSites.length);
+    updateBlockedCounter(socialEnabled, newsEnabled, adultEnabled, customSites.length);
   });
 }
 
-function updateBlockedCounter(social, news, customCount) {
+function updateBlockedCounter(social, news, adult, customCount) {
   let total = 0;
   if (social) total += SOCIAL_COUNT;
   if (news) total += NEWS_COUNT;
+  if (adult) total += ADULT_COUNT;
   total += customCount;
   blockedCountVal.textContent = total;
 }
