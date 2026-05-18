@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>FocusGuard Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #090613, #150d2a);
+      --glass-bg: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-hover: rgba(255, 255, 255, 0.08);
+      --text-main: #f3f0ff;
+      --text-muted: #a59fc4;
+      --accent-purple: #9d4edd;
+      --accent-cyan: #00f5d4;
+      --accent-neon: #ff007f;
+      --shadow-cyan: rgba(0, 245, 212, 0.25);
+      --shadow-purple: rgba(157, 78, 221, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      width: 360px;
+      min-height: 530px;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      overflow-x: hidden;
+      padding: 16px;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-purple);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-cyan);
+    }
+
+    /* Header Section */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      border: 1.5px solid var(--accent-cyan);
+      box-shadow: 0 0 10px var(--shadow-cyan);
+    }
+
+    .header-info h1 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, #fff, #cfa8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-cyan);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 12px var(--accent-cyan); }
+      100% { transform: scale(0.9); opacity: 0.6; }
+    }
+
+    /* Stat Banner */
+    .stat-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .stat-val {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 8px var(--shadow-cyan);
+    }
+
+    /* Cards & Toggles */
+    .card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      backdrop-filter: blur(8px);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .card:hover {
+      border-color: rgba(157, 78, 221, 0.4);
+      background: var(--glass-hover);
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toggle-label h2 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .toggle-label p {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Custom Switch style */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #fff;
+      transition: .3s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    input:checked + .slider {
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+      border-color: transparent;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px var(--accent-cyan);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Custom Site Adder */
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 16px 0 8px 4px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .domain-input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 13px;
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    .domain-input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 245, 212, 0.15), inset 0 0 5px rgba(0, 245, 212, 0.05);
+    }
+
+    .domain-input::placeholder {
+      color: rgba(165, 159, 196, 0.5);
+    }
+
+    .add-btn {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-neon));
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      padding: 0 16px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px var(--shadow-purple);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(157, 78, 221, 0.5);
+    }
+
+    .add-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Blocked Custom list */
+    .custom-list {
+      max-height: 180px;
+      overflow-y: auto;
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.15);
+      padding: 6px;
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--glass-bg);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .list-item:last-child {
+      margin-bottom: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .list-item span {
+      font-size: 13px;
+      color: var(--text-main);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 240px;
+    }
+
+    .delete-btn {
+      background: transparent;
+      border: none;
+      color: #ff4a5a;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .delete-btn:hover {
+      background: rgba(255, 74, 90, 0.1);
+      transform: scale(1.1);
+    }
+
+    .empty-state {
+      padding: 24px 12px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Premium Header -->
+  <div class="header">
+    <img src="icon.png" class="header-logo" alt="FocusGuard Logo">
+    <div class="header-info">
+      <h1>FocusGuard Fixed</h1>
+      <div class="status-badge">
+        <div class="status-dot"></div>
+        <span>Shield Active</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistic banner -->
+  <div class="stat-container">
+    <span class="stat-label">Total Blocked Sites</span>
+    <span id="blocked-count" class="stat-val">0</span>
+  </div>
+
+  <!-- Category Block Toggles -->
+  <div class="card">
+    <div class="toggle-row">
+      <div class="toggle-label">
+        <h2>Social Media Blocker</h2>
+        <p>Blocks Youtube, Insta, FB, Twitter...</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-social" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="toggle-row">
+      <div class="toggle-label">
+        <h2>News Channel Blocker</h2>
+        <p>Blocks ABP, Aaj Tak, NDTV, BBC...</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-news" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Custom Site Blocker Section -->
+  <div class="section-title">Custom Block List</div>
+  
+  <div class="input-group">
+    <input type="text" id="domain-input" class="domain-input" placeholder="e.g., reddit.com" autocomplete="off">
+    <button id="add-domain-btn" class="add-btn">Add</button>
+  </div>
+
+  <div id="custom-list-container" class="custom-list">
+    <!-- List items injected here dynamically -->
+    <div class="empty-state">No custom websites blocked yet.</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

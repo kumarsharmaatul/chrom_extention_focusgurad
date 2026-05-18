@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>FocusGuard | Stay Focused</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at top, #140d2d, #05030a);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --text-main: #f3f0ff;
+      --text-muted: #a59fc4;
+      --accent-purple: #9d4edd;
+      --accent-cyan: #00f5d4;
+      --accent-neon: #ff007f;
+      --shadow-cyan: rgba(0, 245, 212, 0.4);
+      --shadow-purple: rgba(157, 78, 221, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      overflow: hidden;
+    }
+
+    /* Ambient Glowing Orbs */
+    .orb {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: 1;
+      opacity: 0.15;
+    }
+    .orb-1 {
+      top: 10%;
+      left: 15%;
+      background: var(--accent-purple);
+      animation: drift 15s infinite alternate;
+    }
+    .orb-2 {
+      bottom: 10%;
+      right: 15%;
+      background: var(--accent-cyan);
+      animation: drift 20s infinite alternate-reverse;
+    }
+
+    @keyframes drift {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(50px, 30px) scale(1.2); }
+    }
+
+    /* Glass Container */
+    .container {
+      position: relative;
+      z-index: 10;
+      width: 90%;
+      max-width: 580px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 48px 40px;
+      border-radius: 32px;
+      text-align: center;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), 
+                  inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Shield Graphic */
+    .shield-icon {
+      margin-bottom: 28px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .shield-svg {
+      width: 84px;
+      height: 84px;
+      filter: drop-shadow(0 0 15px var(--shadow-cyan));
+      animation: pulseGlow 3s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(0, 245, 212, 0.3)); }
+      50% { transform: scale(1.05); filter: drop-shadow(0 0 30px rgba(0, 245, 212, 0.6)); }
+    }
+
+    /* Text elements */
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff, #c7a5ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .domain-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 14px;
+      color: var(--accent-cyan);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 32px;
+      text-shadow: 0 0 10px var(--shadow-cyan);
+    }
+
+    /* Quotes area */
+    .quote-box {
+      border-left: 3px solid var(--accent-purple);
+      background: rgba(157, 78, 221, 0.03);
+      padding: 20px 24px;
+      border-radius: 0 16px 16px 0;
+      text-align: left;
+      margin-bottom: 36px;
+      position: relative;
+    }
+
+    .quote-text {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-main);
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+
+    .quote-author {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Go Back Button */
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .back-btn {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-neon));
+      border: none;
+      border-radius: 16px;
+      color: #fff;
+      padding: 16px 36px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px var(--shadow-purple);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(157, 78, 221, 0.6);
+    }
+
+    .back-btn:active {
+      transform: translateY(0);
+    }
+
+    .secondary-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      color: var(--text-main);
+      padding: 16px 28px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .secondary-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Light Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <!-- Central Card -->
+  <div class="container">
+    
+    <!-- Shield Logo SVG -->
+    <div class="shield-icon">
+      <svg class="shield-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" stroke="#00f5d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 11V15" stroke="#00f5d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="12" cy="8" r="1.5" fill="#00f5d4"/>
+      </svg>
+    </div>
+
+    <h1>Focus Mode Activated</h1>
+    <div class="domain-badge" id="domain-badge">protected by focusguard</div>
+
+    <!-- Motivational Quotes -->
+    <div class="quote-box">
+      <p class="quote-text" id="quote-text">"Your focus decides your reality."</p>
+      <p class="quote-author" id="quote-author">Star Wars</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="btn-group">
+      <button class="back-btn" onclick="exitPage()">Go Back</button>
+      <button class="secondary-btn" onclick="goToDashboard()">Learn More</button>
+    </div>
+
+  </div>
+
+  <script>
+    // Productivity Quotes
+    const QUOTES = [
+      { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+      { text: "Focus is a matter of deciding what things you're not going to do.", author: "John Carmack" },
+      { text: "Amateurs sit and wait for inspiration, the rest of us just get up and go to work.", author: "Stephen King" },
+      { text: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
+      { text: "Work expands to fill the time available for its completion.", author: "Parkinson's Law" },
+      { text: "Your focus decides your reality.", author: "Star Wars" },
+      { text: "You don't need more time, you just need more focus.", author: "Unknown" },
+      { text: "Deep Work: Professional activities performed in a state of distraction-free concentration.", author: "Cal Newport" },
+      { text: "Do first things first, and second things not at all.", author: "Peter Drucker" },
+      { text: "By failing to prepare, you are preparing to fail.", author: "Benjamin Franklin" }
+    ];
+
+    // Initialize Quote & Target Site Name
+    document.addEventListener("DOMContentLoaded", () => {
+      // Pick random quote
+      const randIdx = Math.floor(Math.random() * QUOTES.length);
+      document.getElementById("quote-text").textContent = `"${QUOTES[randIdx].text}"`;
+      document.getElementById("quote-author").textContent = QUOTES[randIdx].author;
+
+      // Extract site parameter from URL query
+      const params = new URLSearchParams(window.location.search);
+      const site = params.get("site");
+      if (site) {
+        document.getElementById("domain-badge").textContent = `${site.toUpperCase()} IS BLOCKED`;
+      }
+    });
+
+    // Exit function
+    function exitPage() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        // Fallback: close the tab
+        window.close();
+      }
+    }
+
+    // Secondary action (e.g. redirect to useful site or just show message)
+    function goToDashboard() {
+      window.location.href = "https://google.com";
+    }
+  </script>
+</body>
+</html>
