@@ -109,8 +109,19 @@ function cleanDomain(url) {
   return clean;
 }
 
+// Mutex variables to prevent concurrent execution of updateBlockingRules
+let isUpdatingRules = false;
+let pendingUpdate = false;
+
 // Main function to rebuild and apply DNR rules dynamically
 async function updateBlockingRules() {
+  if (isUpdatingRules) {
+    pendingUpdate = true;
+    return;
+  }
+  isUpdatingRules = true;
+  pendingUpdate = false;
+
   try {
     const data = await chrome.storage.local.get(["socialEnabled", "newsEnabled", "adultEnabled", "customSites"]);
     
@@ -176,6 +187,12 @@ async function updateBlockingRules() {
     console.log(`FocusGuard: Rules updated successfully. Blocking ${newRules.length} domains.`);
   } catch (err) {
     console.error("FocusGuard Error: Failed to update dynamic rules.", err);
+  } finally {
+    isUpdatingRules = false;
+    if (pendingUpdate) {
+      // Delay slightly to yield execution and let the browser finish database commit
+      setTimeout(updateBlockingRules, 50);
+    }
   }
 }
 
@@ -199,9 +216,8 @@ chrome.runtime.onInstalled.addListener(() => {
       newsEnabled,
       adultEnabled,
       customSites
-    }, () => {
-      updateBlockingRules();
     });
+    // Note: We don't call updateBlockingRules() here because chrome.storage.onChanged will automatically fire.
   });
 });
 
