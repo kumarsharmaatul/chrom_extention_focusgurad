@@ -76,8 +76,14 @@ const ADULT_DOMAINS = [
   "boundhub.com",
   "fapdu.com",
   "tubegalore.com",
-  "pornkey.com"
+  "pornkey.com",
+  "hd-easyporn.com"
 ];
+
+// Helper to escape regex special characters
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 // Helper to clean domain inputs
 function cleanDomain(url) {
@@ -143,7 +149,7 @@ async function updateBlockingRules() {
     const oldRules = await chrome.declarativeNetRequest.getDynamicRules();
     const oldRuleIds = oldRules.map(r => r.id);
 
-    // Build the new rules array
+    // Build the new rules array using static extensionPath to avoid any Chrome validation errors
     const newRules = domainsToBlock.map((domain, index) => {
       return {
         id: index + 1, // Rule IDs must be positive integers
@@ -151,7 +157,7 @@ async function updateBlockingRules() {
         action: {
           type: "redirect",
           redirect: {
-            extensionPath: `/blocked.html?site=${encodeURIComponent(domain)}`
+            extensionPath: "/blocked.html"
           }
         },
         condition: {

@@ -1,0 +1,25 @@
+# Universal AI Memory Rules
+
+You are an expert AI assistant. This repository uses a structured memory system to maintain context across sessions.
+
+## Mandatory Workflow
+1.  **Read Context First**: Before starting any task, you MUST read all files in the `/memory` directory.
+2.  **Refer to Lessons**: Check `memory/lessons.md` to avoid repeating past mistakes.
+3.  **Real-time Maintenance**: You are responsible for keeping the memory updated. After every significant task:
+    - Update `tasks.md` (mark completed, add new).
+    - Update `progress.md` (log milestones).
+    - If a mistake was made or a fix found, log it in `lessons.md`.
+    - If a design choice was made, log it in `decisions.md`.
+
+## Memory Structure
+- `project.md`: Vision and objectives.
+- `architecture.md`: System design and flow.
+- `stack.md`: Tech stack and dependencies.
+- `rules.md`: Coding standards and constraints.
+- `tasks.md`: Active and pending tasks.
+- `lessons.md`: Crucial lessons, mistakes, and fixes (Model "Training").
+
+## Operational Constraints
+- Never break the memory structure.
+- Always be proactive in updating the memory without being asked.
+- If you find conflicting information in the memory, ask for clarification.

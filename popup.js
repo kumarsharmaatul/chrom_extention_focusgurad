@@ -3,7 +3,7 @@
 // Keep category sizes in sync with background.js
 const SOCIAL_COUNT = 11;
 const NEWS_COUNT = 29;
-const ADULT_COUNT = 30;
+const ADULT_COUNT = 31;
 
 // DOM Elements
 const toggleSocial = document.getElementById("toggle-social");
