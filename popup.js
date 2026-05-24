@@ -1,7 +1,7 @@
 // FocusGuard Fixed - Popup Controller
 
 // Keep category sizes in sync with background.js
-const SOCIAL_COUNT = 11;
+const SOCIAL_COUNT = 10;
 const NEWS_COUNT = 29;
 const ADULT_COUNT = 31;
 
@@ -41,10 +41,20 @@ function cleanDomain(url) {
 // Load configurations on startup
 document.addEventListener("DOMContentLoaded", () => {
   chrome.storage.local.get(["socialEnabled", "newsEnabled", "adultEnabled", "customSites"], (result) => {
-    const socialEnabled = result.socialEnabled !== undefined ? result.socialEnabled : true;
-    const newsEnabled = result.newsEnabled !== undefined ? result.newsEnabled : true;
-    const adultEnabled = result.adultEnabled !== undefined ? result.adultEnabled : true;
+    // Force enable blocks if they were somehow disabled, as the UI toggles are now hidden
+    const socialEnabled = true;
+    const newsEnabled = true;
+    const adultEnabled = true;
     const customSites = result.customSites || [];
+
+    // Update storage if needed
+    if (result.socialEnabled !== true || result.newsEnabled !== true || result.adultEnabled !== true) {
+      chrome.storage.local.set({
+        socialEnabled: true,
+        newsEnabled: true,
+        adultEnabled: true
+      });
+    }
 
     // Set UI checkboxes
     toggleSocial.checked = socialEnabled;
