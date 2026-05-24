@@ -1,7 +1,7 @@
 // FocusGuard Fixed - Popup Controller
 
 // Keep category sizes in sync with background.js
-const SOCIAL_COUNT = 11;
+const SOCIAL_COUNT = 10;
 const NEWS_COUNT = 29;
 const ADULT_COUNT = 31;
 
@@ -11,6 +11,7 @@ const toggleNews = document.getElementById("toggle-news");
 const toggleAdult = document.getElementById("toggle-adult");
 const domainInput = document.getElementById("domain-input");
 const addBtn = document.getElementById("add-domain-btn");
+const clearAllBtn = document.getElementById("clear-all-btn");
 const listContainer = document.getElementById("custom-list-container");
 const blockedCountVal = document.getElementById("blocked-count");
 
@@ -41,10 +42,20 @@ function cleanDomain(url) {
 // Load configurations on startup
 document.addEventListener("DOMContentLoaded", () => {
   chrome.storage.local.get(["socialEnabled", "newsEnabled", "adultEnabled", "customSites"], (result) => {
-    const socialEnabled = result.socialEnabled !== undefined ? result.socialEnabled : true;
-    const newsEnabled = result.newsEnabled !== undefined ? result.newsEnabled : true;
-    const adultEnabled = result.adultEnabled !== undefined ? result.adultEnabled : true;
+    // Force enable blocks if they were somehow disabled, as the UI toggles are now hidden
+    const socialEnabled = true;
+    const newsEnabled = true;
+    const adultEnabled = true;
     const customSites = result.customSites || [];
+
+    // Update storage if needed
+    if (result.socialEnabled !== true || result.newsEnabled !== true || result.adultEnabled !== true) {
+      chrome.storage.local.set({
+        socialEnabled: true,
+        newsEnabled: true,
+        adultEnabled: true
+      });
+    }
 
     // Set UI checkboxes
     toggleSocial.checked = socialEnabled;
@@ -81,11 +92,21 @@ toggleAdult.addEventListener("change", () => {
 
 // Add Custom Domain
 addBtn.addEventListener("click", addCustomDomain);
+clearAllBtn.addEventListener("click", clearAllDomains);
 domainInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     addCustomDomain();
   }
 });
+
+function clearAllDomains() {
+  if (confirm("Are you sure you want to clear all custom blocked websites?")) {
+    chrome.storage.local.set({ customSites: [] }, () => {
+      renderCustomList([]);
+      updateStatistics();
+    });
+  }
+}
 
 function addCustomDomain() {
   const rawInput = domainInput.value;
@@ -134,8 +155,10 @@ function renderCustomList(sites) {
 
     const delBtn = document.createElement("button");
     delBtn.className = "delete-btn";
-    delBtn.innerHTML = "🚫";
-    delBtn.title = "Unblock";
+    delBtn.innerHTML = "✕";
+    delBtn.style.fontSize = "18px";
+    delBtn.style.fontWeight = "bold";
+    delBtn.title = "Remove Site";
     delBtn.addEventListener("click", () => {
       removeCustomDomain(index);
     });

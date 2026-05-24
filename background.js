@@ -5,7 +5,6 @@ const SOCIAL_DOMAINS = [
   "instagram.com",
   "twitter.com",
   "x.com",
-  "linkedin.com",
   "reddit.com",
   "tiktok.com",
   "pinterest.com",
@@ -206,9 +205,10 @@ chrome.storage.onChanged.addListener((changes) => {
 // Listener for extension installation or update
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.get(["socialEnabled", "newsEnabled", "adultEnabled", "customSites"], (result) => {
-    const socialEnabled = result.socialEnabled !== undefined ? result.socialEnabled : true;
-    const newsEnabled = result.newsEnabled !== undefined ? result.newsEnabled : true;
-    const adultEnabled = result.adultEnabled !== undefined ? result.adultEnabled : true;
+    // Force enable categories by default and on update
+    const socialEnabled = true;
+    const newsEnabled = true;
+    const adultEnabled = true;
     const customSites = result.customSites || [];
 
     chrome.storage.local.set({

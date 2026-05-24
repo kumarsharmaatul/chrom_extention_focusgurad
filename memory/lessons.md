@@ -23,3 +23,6 @@
 ## Upstox IP Restrictions
 - **Mistake**: Interpreting 403 Forbidden as just an Auth error.
 - **Lesson**: Upstox error `UDAPI1154` specifically means Static IP restriction. Always provide clear UI instructions for the user to fix this in the developer portal.
+
+## UI-Driven State Enforcement
+- **Lesson**: When hiding UI elements that control state (like toggles), ensure the underlying logic forces the desired state upon initialization. Simply hiding a checked checkbox doesn't guarantee the state is `true` in storage if it was previously `false`. Force-update storage on load to match the new restricted UI.

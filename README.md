@@ -10,7 +10,7 @@ FocusGuard Fixed transitions your browsing experience from a distraction-filled 
 
 ### 1. ⚡ Dynamic Rules Engine (Manifest V3)
 Unlike old-school blockers that use heavy static configs or deprecated background interception routines, FocusGuard leverages the **Chrome Declarative Net Request (DNR) API** to dynamically block and redirect pages with sub-millisecond efficiency.
-*   **ON/OFF Category Toggles**: Turn blocking categories ON or OFF in real-time from the dashboard (Social Media, News Channels, Adult Content).
+*   **Forced Protection**: Blocking categories are locked and force-enabled (Social Media, News Channels, Adult Content) to ensure unwavering focus.
 *   **Smart URL Normalization**: Automatically strips protocols (`http://`, `https://`), paths (`/subpage`), port numbers, and `www.` prefixes to block full domains accurately.
 *   **Robust Redirect Architecture**: Uses clean static extension resource paths to guarantee validation compatibility with Manifest V3 specifications.
 
@@ -20,7 +20,7 @@ Includes a high-precision, comprehensive list of **31 major pornography and adul
 ### 3. 📱 Premium Glassmorphic Dashboard
 A visually gorgeous interface styled using custom modern typography (**Outfit** font) and futuristic aesthetics:
 *   Real-time **Blocked Site Statistics Counter**.
-*   Customized toggles with sliding animations and glowing indicators.
+*   Locked category indicators for high-discipline productivity.
 *   A responsive **Custom Block List manager** where you can add websites on-the-fly, see items with fade-in entries, and delete them instantly.
 
 ### 3. 🧠 Inspiring Focus Page (`blocked.html`)
