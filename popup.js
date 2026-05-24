@@ -11,6 +11,7 @@ const toggleNews = document.getElementById("toggle-news");
 const toggleAdult = document.getElementById("toggle-adult");
 const domainInput = document.getElementById("domain-input");
 const addBtn = document.getElementById("add-domain-btn");
+const clearAllBtn = document.getElementById("clear-all-btn");
 const listContainer = document.getElementById("custom-list-container");
 const blockedCountVal = document.getElementById("blocked-count");
 
@@ -91,11 +92,21 @@ toggleAdult.addEventListener("change", () => {
 
 // Add Custom Domain
 addBtn.addEventListener("click", addCustomDomain);
+clearAllBtn.addEventListener("click", clearAllDomains);
 domainInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     addCustomDomain();
   }
 });
+
+function clearAllDomains() {
+  if (confirm("Are you sure you want to clear all custom blocked websites?")) {
+    chrome.storage.local.set({ customSites: [] }, () => {
+      renderCustomList([]);
+      updateStatistics();
+    });
+  }
+}
 
 function addCustomDomain() {
   const rawInput = domainInput.value;
