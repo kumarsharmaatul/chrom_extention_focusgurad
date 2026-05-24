@@ -155,8 +155,10 @@ function renderCustomList(sites) {
 
     const delBtn = document.createElement("button");
     delBtn.className = "delete-btn";
-    delBtn.innerHTML = "🚫";
-    delBtn.title = "Unblock";
+    delBtn.innerHTML = "✕";
+    delBtn.style.fontSize = "18px";
+    delBtn.style.fontWeight = "bold";
+    delBtn.title = "Remove Site";
     delBtn.addEventListener("click", () => {
       removeCustomDomain(index);
     });
